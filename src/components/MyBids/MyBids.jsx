@@ -1,21 +1,32 @@
 import React, { use, useEffect, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import Swal from 'sweetalert2';
+import useAxiosSecure from '../hooks/useAxiosSecure';
 
 const MyBids = () => {
     const { user } = use(AuthContext);
     const [bids, setBids] = useState([])
 
-    useEffect(() => {
-        if (user?.email) {
-            fetch(`http://localhost:3000/bids?email=${user.email}`)
-                .then(res => res.json())
-                .then(data => {
-                    console.log(data);
-                    setBids(data)
-                })
-        }
-    }, [user?.email])
+    const axiosSecure = useAxiosSecure();
+
+    useEffect(()=>{
+        axiosSecure.get(`/bids?email=independentnazrul@gmail.com`)
+        .then(data=>{
+            setBids(data.data)
+        })
+    },[user,axiosSecure])
+
+
+    // useEffect(() => {
+    //     if (user?.email) {
+    //         fetch(`http://localhost:3000/bids?email=${user.email}`)
+    //             .then(res => res.json())
+    //             .then(data => {
+    //                 console.log(data);
+    //                 setBids(data)
+    //             })
+    //     }
+    // }, [user?.email])
 
     const handleDeleteBid = (_id) => {
         Swal.fire({
